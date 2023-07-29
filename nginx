@@ -1,0 +1,36 @@
+apt install nginx 
+systemctl start nginx
+systemctl status nginx #make sure nginx is active 
+cd /etc/nginx/site-available/
+unlink /etc/nginx/sites-enabled/default
+touch wordpress.conf #create file name what you want 
+nano wordpress.conf
+server {
+  server_name zabbix.vc2.bunjouen.online;
+
+  location / {
+      proxy_set_header Host $host;
+      proxy_pass http://zabbix.vc2.bunjouen.online:8080;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Nginx-Proxy true;
+
+ }
+
+nginx -t 
+systemctl reload nginx #make sure it doesn't error
+ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/wordpress.conf
+systemctl restart nginx #make sure nginx is active 
+after that try to access url wp-techgenius.sothea.site note don't use with ports 
+when you use url to see your website let's continue configure with certbot 
+
+before install certbot make sure you have allow ports 443 or HTTPS in security group
+sudo snap install core; sudo snap refresh core
+sudo apt remove certbot
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot --nginx -d zabbix.vc2.bunjouen.online
+
+
+
+
